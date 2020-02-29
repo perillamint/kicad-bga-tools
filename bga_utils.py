@@ -1,4 +1,5 @@
 from pcbnew import *
+from functools import *
 
 
 class BgaInfo:

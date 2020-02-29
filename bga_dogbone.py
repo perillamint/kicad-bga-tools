@@ -32,7 +32,7 @@ def make_dogbone(board, mod, bga_info, skip_outer, edge_layers):
     ofsy = (dist-fy)/2
 
     
-    for pad in filter(lambda p:len(pbyn[p.GetNetCode()])>1,mod.Pads()):
+    for pad in list(filter(lambda p:len(pbyn[p.GetNetCode()])>1,mod.Pads())):
     #for pad in filter(lambda p: p.GetNet().GetNodesCount() > 1, mod.Pads()):
         pad_pos = get_pad_position(bga_info, pad)
         if is_pad_outer_ring(bga_info, pad_pos, skip_outer):
@@ -70,7 +70,7 @@ def make_dogbone(board, mod, bga_info, skip_outer, edge_layers):
         new_track.SetStart(pad.GetPosition())
         new_track.SetEnd(ep)
         new_track.SetNetCode(pad.GetNetCode())
-        new_track.SetLayer(pad.GetLayer())
+        new_track.SetLayer(mod.GetLayer())
         board.Add(new_track)
         # Create via
         new_via = VIA(board)
@@ -99,14 +99,14 @@ def run_original():
     SaveBoard("test1.kicad_pcb", my_board)
 
 def help():
-    print "This python script runs on the currently-loaded board and the selected module."
+    print ("This python script runs on the currently-loaded board and the selected module.")
 
 def run():
     my_board = GetBoard()
     my_board.BuildListOfNets()
 
     #mod = my_board.FindModuleByReference("t.xc7.inst")
-    mod = filter(lambda m: m.IsSelected(), my_board.GetModules())
+    mod = list(filter(lambda m: m.IsSelected(), my_board.GetModules()))
 
     if len(mod) != 1:
         wx.MessageDialog(None,message="This python script runs on the currently-loaded board and the selected module.",style=wx.OK).ShowModal()
